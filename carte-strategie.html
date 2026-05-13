@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Carte conceptuelle — Atome Formations</title>
+<style>
+  :root{
+    --bg:#f6f2ee;
+    --text:#2b2b2b;
+    --muted:#7b7b7b;
+    --center:#003e55;
+    --linkedin:#0bac91;
+    --bubble:#ff8a65;
+    --line:#d8cfc8;
+    --card:#ffffff;
+    --shadow:0 18px 45px rgba(0,0,0,.10);
+    --radius:999px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);font-family:Arial, Helvetica, sans-serif;color:var(--text)}
+  body{min-height:100vh}
+  .page{
+    max-width:1440px;
+    margin:0 auto;
+    padding:28px 28px 40px;
+  }
+
+  .topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:20px;
+    margin-bottom:14px;
+  }
+  .title-wrap{max-width:560px}
+  .eyebrow{
+    display:flex;align-items:center;gap:12px;
+    letter-spacing:.06em;text-transform:uppercase;font-size:13px;color:#444
+  }
+  .eyebrow .plus{font-size:42px;line-height:1;font-weight:300;margin-top:-2px}
+  h1{
+    margin:2px 0 8px;
+    font-size:26px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    font-weight:500;
+  }
+  .intro{
+    margin:0;
+    color:var(--muted);
+    line-height:1.55;
+    font-size:14px;
+  }
+
+  .legend{
+    display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:flex-end;
+    margin-top:8px;
+  }
+  .legend-item{
+    display:flex;align-items:center;gap:8px;
+    background:rgba(255,255,255,.55);
+    border:1px solid rgba(0,0,0,.05);
+    padding:7px 11px;border-radius:999px;font-size:11.5px;color:#555; line-height:1;
+  }
+  .dot{width:12px;height:12px;border-radius:50%}
+  .dot.center{background:var(--center)}
+  .dot.linkedin{background:var(--linkedin)}
+  .dot-bubble{background:var(--bubble)}
+
+  .map-wrap{
+    position:relative;
+    min-height:1080px;
+    margin-top:24px;
+    background:
+      radial-gradient(circle at 47% 45%, rgba(0,62,85,.05), transparent 23%),
+      radial-gradient(circle at 67% 34%, rgba(11,172,145,.05), transparent 26%),
+      radial-gradient(circle at 20% 30%, rgba(11,172,145,.05), transparent 24%),
+      radial-gradient(circle at 68% 72%, rgba(11,172,145,.05), transparent 24%),
+      radial-gradient(circle at 26% 72%, rgba(11,172,145,.05), transparent 24%);
+    border-radius:28px;
+    overflow:hidden;
+  }
+
+  svg.lines{
+    position:absolute;inset:0;
+    width:100%;height:100%;
+    pointer-events:none;
+  }
+
+  .orbit{
+    position:absolute;border:1.4px dashed var(--line);border-radius:50%;
+    pointer-events:none;
+  }
+  .orbit.center{width:470px;height:470px;left:350px;top:172px;opacity:.7}
+  .orbit.linkedin{width:430px;height:430px;left:810px;top:120px;opacity:.9}
+
+  .node{
+    position:absolute;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:18px;
+    box-shadow:var(--shadow);
+    user-select:none;
+  }
+
+  .node.center{
+    left:470px;top:250px;
+    width:250px;height:250px;
+    background:var(--center);
+    color:#fff;
+    padding:24px;
+    z-index:3;
+    flex-direction:column;
+    gap:10px;
+  }
+  .center-logo{
+    width:104px;height:104px;object-fit:contain;display:block
+  }
+  .center-kicker{
+    font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.72)
+  }
+  .center-text{
+    font-size:15px;line-height:1.45;max-width:180px
+  }
+
+  .node.linkedin{
+    left:930px;top:205px;
+    width:230px;height:230px;
+    background:var(--linkedin);
+    color:#fff;
+    z-index:2;
+    cursor:pointer;
+    transition:transform .2s ease, box-shadow .2s ease;
+    flex-direction:column;
+    gap:10px;
+  }
+  .node.linkedin:hover,.bubble:hover{transform:translateY(-3px)}
+
+  .node.google,.node.website,.node.editorial{
+    width:230px;height:230px;
+    background:var(--linkedin);
+    color:#fff;
+    z-index:2;
+    cursor:pointer;
+    transition:transform .2s ease, box-shadow .2s ease;
+    flex-direction:column;
+    gap:10px;
+  }
+  .node.google{left:130px;top:250px;}
+  .node.website{left:930px;top:650px;}
+  .node.editorial{left:130px;top:650px;}
+  .node.google:hover,.node.website:hover,.node.editorial:hover{transform:translateY(-3px)}
+
+  .orbit.google{width:430px;height:430px;left:30px;top:150px;opacity:.9}
+  .orbit.website{width:430px;height:430px;left:820px;top:550px;opacity:.9}
+  .orbit.editorial{width:430px;height:430px;left:30px;top:550px;opacity:.9}
+
+  .gb1{left:65px;top:140px}
+  .gb2{left:10px;top:395px}
+  .gb3{left:270px;top:395px}
+
+  .sw1{left:875px;top:535px}
+  .sw2{left:1072px;top:530px}
+  .sw3{left:1140px;top:745px}
+  .sw4{left:892px;top:845px}
+
+  .pe1{left:55px;top:595px}
+  .pe2{left:305px;top:825px}
+
+  .linkedin-title{
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.76)
+  }
+  .linkedin-main{
+    font-size:30px;font-weight:700;line-height:1
+  }
+  .linkedin-sub{
+    font-size:14px;line-height:1.35;max-width:150px
+  }
+
+  .bubble{
+    width:120px;height:120px;
+    background:var(--bubble);
+    color:#fff;
+    cursor:pointer;
+    transition:transform .2s ease, box-shadow .2s ease;
+    z-index:4;
+    font-weight:700;
+    font-size:14px;
+    line-height:1.2;
+    letter-spacing:.01em;
+  }
+  .bubble small{
+    display:block;
+    margin-top:6px;
+    font-size:11px;
+    font-weight:400;
+    opacity:.92;
+    letter-spacing:.03em;
+  }
+
+  .b1{left:875px;top:92px}
+  .b2{left:1070px;top:85px}
+  .b3{left:1138px;top:303px}
+  .b4{left:892px;top:392px}
+
+  .label-ghost{
+    position:absolute;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.13em;
+    color:#8b8179;
+  }
+  .lg1{left:61px;top:160px}
+  .lg2{left:1210px;top:965px}
+
+  .note{
+    position:absolute;
+    left:470px;bottom:40px;max-width:520px; text-align:center;
+    color:#7e756d;font-size:13px;line-height:1.55;
+  }
+
+  .modal{
+    position:fixed;inset:0;background:rgba(0,0,0,.26);
+    display:none;align-items:center;justify-content:center;
+    padding:24px;z-index:50;
+  }
+  .modal.open{display:flex}
+  .modal-card{
+    width:min(860px, 96vw);
+    max-height:88vh;
+    overflow:auto;
+    background:var(--card);
+    border-radius:24px;
+    box-shadow:0 35px 80px rgba(0,0,0,.22);
+    padding:26px 26px 22px;
+    position:relative;
+  }
+  .close{
+    position:absolute;right:16px;top:16px;
+    width:40px;height:40px;border:none;border-radius:50%;
+    background:#f1efec;cursor:pointer;font-size:22px;color:#555;
+  }
+  .modal-top{
+    display:flex;justify-content:space-between;gap:18px;align-items:flex-start;
+    padding-right:52px;
+  }
+  .modal-title{
+    font-size:30px;line-height:1.1;margin:0 0 6px;font-weight:700
+  }
+  .modal-sub{
+    margin:0;color:#666;font-size:15px;line-height:1.55;max-width:600px
+  }
+  .badge{
+    background:#eef8f5;color:#0b7e6b;border:1px solid rgba(11,172,145,.18);
+    border-radius:999px;padding:8px 12px;font-size:12px;white-space:nowrap
+  }
+
+  .progress-wrap{margin:22px 0 24px}
+  .progress-meta{
+    display:flex;justify-content:space-between;gap:12px;
+    margin-bottom:8px;font-size:13px;color:#666
+  }
+  .progress{
+    width:100%;height:12px;background:#efe9e4;border-radius:999px;overflow:hidden
+  }
+  .progress > span{
+    display:block;height:100%;background:linear-gradient(90deg, var(--linkedin), #67d9c3);
+    border-radius:999px
+  }
+
+  .accordion{
+    display:grid;gap:12px;
+  }
+  details.section{
+    border:1px solid #eee4dc;
+    background:#fffaf7;
+    border-radius:16px;
+    padding:0 16px;
+    overflow:hidden;
+  }
+  details.section[open]{
+    background:#fff;
+    border-color:#ffd2c2;
+  }
+  summary{
+    list-style:none;
+    display:flex;align-items:center;justify-content:space-between;
+    gap:12px;padding:16px 0;cursor:pointer;font-weight:700;font-size:16px
+  }
+  summary::-webkit-details-marker{display:none}
+  .plus{
+    width:30px;height:30px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:#ffe3d9;color:#d85b32;font-size:22px;flex:0 0 auto;
+    transition:transform .2s ease;
+  }
+  details[open] .plus{transform:rotate(45deg)}
+  .section-body{
+    padding:0 0 16px;
+    color:#555;
+    line-height:1.62;
+    font-size:15px;
+  }
+  .section-body p{margin:0 0 12px}
+  .section-body p:last-child{margin-bottom:0}
+  .section-body ul{margin:0 0 12px 0;padding-left:20px}
+  .section-body li{margin:0 0 8px}
+  .section-body li:last-child{margin-bottom:0}
+  .progress-wrap.hidden{display:none}
+  .example{
+    margin-top:10px;
+    padding:14px 16px;
+    background:#fbf6f2;
+    border-left:4px solid var(--bubble);
+    border-radius:10px;
+  }
+
+  @media (max-width: 1280px){
+    .page{padding:20px}
+    .map-wrap{min-height:1360px}
+    .orbit.center{left:200px;top:240px}
+    .orbit.linkedin{left:520px;top:110px}
+    .node.center{left:320px;top:320px}
+    .node.linkedin{left:645px;top:195px}
+    .b1{left:582px;top:82px}
+    .b2{left:790px;top:76px}
+    .b3{left:858px;top:295px}
+    .b4{left:600px;top:394px}
+  }
+
+  @media (max-width: 980px){
+    .topbar{flex-direction:column}
+    .legend{justify-content:flex-start}
+    .map-wrap{min-height:2000px}
+    .orbit.center{width:360px;height:360px;left:50%;transform:translateX(-50%);top:300px}
+    .orbit.linkedin{width:360px;height:360px;left:50%;transform:translateX(-50%);top:690px}
+    .node.center{left:50%;transform:translateX(-50%);top:355px;width:220px;height:220px}
+    .node.linkedin{left:50%;transform:translateX(-50%);top:745px;width:210px;height:210px}
+    .bubble{width:108px;height:108px}
+    .b1{left:calc(50% - 155px);top:650px}
+    .b2{left:calc(50% + 45px);top:650px}
+    .b3{left:calc(50% + 95px);top:880px}
+    .b4{left:calc(50% - 165px);top:890px}
+    .lg1,.lg2,.note{display:none}
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div class="title-wrap">
+                <h1>Atome Formations · présence digitale</h1>
+        <p class="intro">Une lecture visuelle de la stratégie avec un noyau central fort et 4 pôles complémentaires : LinkedIn, Google Business, Site Web et Puissance éditoriale. Chaque bulle ouvre un pop-up central avec progression, structure et sections déroulantes pour détailler la mise en œuvre.</p>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><span class="dot center"></span> Cœur de la stratégie</div>
+        <div class="legend-item"><span class="dot linkedin"></span> Canal prioritaire</div>
+        <div class="legend-item"><span class="dot dot-bubble"></span> Actions clés</div>
+      </div>
+    </div>
+
+    <div class="map-wrap" id="map">
+<div class="orbit center"></div>
+      <div class="orbit linkedin"></div>
+      <div class="orbit google"></div>
+      <div class="orbit website"></div>
+      <div class="orbit editorial"></div>
+
+      <svg class="lines" viewBox="0 0 1400 1080" preserveAspectRatio="none" aria-hidden="true">
+        <line x1="595" y1="375" x2="1045" y2="320" stroke="var(--line)" stroke-width="2.2" stroke-dasharray="5 8"/>
+        <line x1="595" y1="375" x2="245" y2="365" stroke="var(--line)" stroke-width="2.2" stroke-dasharray="5 8"/>
+        <line x1="595" y1="375" x2="245" y2="765" stroke="var(--line)" stroke-width="2.2" stroke-dasharray="5 8"/>
+        <line x1="595" y1="375" x2="1045" y2="765" stroke="var(--line)" stroke-width="2.2" stroke-dasharray="5 8"/>
+
+        <line x1="1045" y1="320" x2="935" y2="150" stroke="var(--line)" stroke-width="2"/>
+        <line x1="1045" y1="320" x2="1130" y2="145" stroke="var(--line)" stroke-width="2"/>
+        <line x1="1045" y1="320" x2="1198" y2="360" stroke="var(--line)" stroke-width="2"/>
+        <line x1="1045" y1="320" x2="952" y2="450" stroke="var(--line)" stroke-width="2"/>
+
+        <line x1="245" y1="365" x2="125" y2="200" stroke="var(--line)" stroke-width="2"/>
+        <line x1="245" y1="365" x2="70" y2="455" stroke="var(--line)" stroke-width="2"/>
+        <line x1="245" y1="365" x2="330" y2="455" stroke="var(--line)" stroke-width="2"/>
+
+        <line x1="1045" y1="765" x2="935" y2="595" stroke="var(--line)" stroke-width="2"/>
+        <line x1="1045" y1="765" x2="1132" y2="590" stroke="var(--line)" stroke-width="2"/>
+        <line x1="1045" y1="765" x2="1200" y2="805" stroke="var(--line)" stroke-width="2"/>
+        <line x1="1045" y1="765" x2="952" y2="905" stroke="var(--line)" stroke-width="2"/>
+
+        <line x1="245" y1="765" x2="115" y2="655" stroke="var(--line)" stroke-width="2"/>
+        <line x1="245" y1="765" x2="365" y2="885" stroke="var(--line)" stroke-width="2"/>
+      </svg>
+
+      <div class="node center">
+        <img class="center-logo" src="LOGO ATOME FORMATIONS (1).png" alt="Logo Atome Formations" />
+        <div class="center-kicker">Au cœur de la stratégie</div>
+        <div class="center-text">Une présence digitale qui transforme la perception… et génère des opportunités.</div>
+      </div>
+
+      <div class="node linkedin" data-key="linkedin">
+        <div class="linkedin-title">Canal à définir</div>
+        <div class="linkedin-main">LinkedIn</div>
+        <div class="linkedin-sub">Autorité · Visibilité · Prise de parole</div>
+      </div>
+
+      <button class="node bubble b1" data-key="profil" aria-label="Profil expert">
+        <div>Profil expert<small>Positionnement</small></div>
+      </button>
+
+      <button class="node bubble b2" data-key="problemes" aria-label='Post "Problèmes"'>
+        <div>Post “Problèmes”<small>Friction réelle</small></div>
+      </button>
+
+      <button class="node bubble b3" data-key="inspirant" aria-label='Post "Inspirant"'>
+        <div>Post “Inspirant”<small>Projection</small></div>
+      </button>
+
+      <button class="node bubble b4" data-key="educatif" aria-label='Post "Éducatif"'>
+        <div>Post “Éducatif”<small>Pédagogie</small></div>
+      </button>
+
+      <div class="node google" data-key="google">
+        <div class="linkedin-title">Canal local</div>
+        <div class="linkedin-main">Google</div>
+        <div class="linkedin-sub">SEO local · Avis · Posts</div>
+      </div>
+
+      <button class="node bubble gb1" data-key="seo_local" aria-label="SEO local">
+        <div>SEO local<small>Mots-clés</small></div>
+      </button>
+
+      <button class="node bubble gb2" data-key="avis_clients" aria-label="Avis clients">
+        <div>Avis clients<small>Preuve sociale</small></div>
+      </button>
+
+      <button class="node bubble gb3" data-key="posts_google" aria-label="Posts Google">
+        <div>Posts Google<small>Présence locale</small></div>
+      </button>
+
+      <div class="node website" data-key="siteweb">
+        <div class="linkedin-title">Canal de conversion</div>
+        <div class="linkedin-main">Site Web</div>
+        <div class="linkedin-sub">Pages · Rassurance · Conversion</div>
+      </div>
+
+      <button class="node bubble sw1" data-key="accueil_impact" aria-label="Accueil impact">
+        <div>Accueil impact<small>Première impression</small></div>
+      </button>
+
+      <button class="node bubble sw2" data-key="page_medico_social" aria-label="Page médico-social">
+        <div>Page médico-social<small>Offre ciblée</small></div>
+      </button>
+
+      <button class="node bubble sw3" data-key="page_formations" aria-label="Page formations">
+        <div>Page formations<small>Offres</small></div>
+      </button>
+
+      <button class="node bubble sw4" data-key="faq_rassurante" aria-label="FAQ rassurante">
+        <div>FAQ rassurante<small>Freins levés</small></div>
+      </button>
+
+      <div class="node editorial" data-key="puissance_editoriale">
+        <div class="linkedin-title">Amplification</div>
+        <div class="linkedin-main">Puissance Éditoriale</div>
+        <div class="linkedin-sub">Face cam · Prise de position</div>
+      </div>
+
+      <button class="node bubble pe1" data-key="video_face_cam" aria-label="Vidéo face cam">
+        <div>Vidéo face cam<small>Incarnation</small></div>
+      </button>
+
+      <button class="node bubble pe2" data-key="prise_position" aria-label="Prise de position">
+        <div>Prise de position<small>Différenciation</small></div>
+      </button>
+</div>
+  </div>
+
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal-card">
+      <button class="close" id="closeBtn" aria-label="Fermer">×</button>
+      <div class="modal-top">
+        <div>
+          <h2 class="modal-title" id="modalTitle">Titre</h2>
+          <p class="modal-sub" id="modalSub">Sous-titre</p>
+        </div>
+        <div class="badge" id="modalBadge">Priorité</div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-meta">
+          <span id="progressLabel">Avancement stratégique</span>
+          <strong id="progressText">0%</strong>
+        </div>
+        <div class="progress"><span id="progressBar" style="width:0%"></span></div>
+      </div>
+
+      <div class="accordion" id="accordion"></div>
+    </div>
+  </div>
+
+<script>
+const content = {
+  linkedin: {
+    showProgress: true,
+    title: "LinkedIn",
+    sub: "Le canal prioritaire pour installer Atome Formations comme une référence visible, crédible et identifiable.",
+    badge: "Canal prioritaire",
+    progress: 72,
+    sections: [
+      {
+        title: "Objectif stratégique",
+        body: `
+          <p>LinkedIn doit faire émerger une image d’experte claire, différenciante et cohérente. L’enjeu n’est pas seulement de publier, mais d’imposer une perception forte sur le marché.</p>
+          <p>Le canal sert à créer de la visibilité récurrente, à élever la crédibilité et à ouvrir des opportunités qualifiées.</p>
+        `
+      },
+      {
+        title: "Ligne éditoriale",
+        body: `
+          <p>La ligne éditoriale s'articule autour de 3 axes : les problèmes réels rencontrés par la cible, l'inspiration qui projette vers une transformation, et l'éducatif qui prouve la maîtrise du sujet.</p>
+          <div class="example">Exemple de logique éditoriale : montrer ce qui bloque, faire ressentir ce qui est possible, puis expliquer comment y parvenir.</div>
+        `
+      }
+    ]
+  },
+  profil: {
+    showProgress: false,
+    title: "Bulle 1 · Profil expert",
+    sub: "Faire du profil un véritable point d'ancrage de l'expertise, pas une simple vitrine descriptive.",
+    badge: "Fondation",
+    progress: 90,
+    sections: [
+      {
+        title: "Titre de profil",
+        body: `
+          <p>Le titre doit parler résultat et différenciation. Il doit expliquer à qui l'on s'adresse et en quoi l'approche change la donne.</p>
+          <div class="example">Exemple : “Atome Formations · Nous transformons les formations en leviers d'évolution, d'impact et de passage à l'action.”</div>
+        `
+      },
+      {
+        title: "Section “À propos”",
+        body: `
+          <p>La section “À propos” doit poser un constat, faire ressentir un problème puis affirmer la promesse. On ne raconte pas un CV, on installe une vision.</p>
+          <div class="example">Texte proposé : “Trop de formations transmettent des informations sans produire de véritable mouvement.
+
+Dans des secteurs exigeants comme le médico-social, la formation des salariés, le management ou encore le marketing, les enjeux sont concrets : posture, efficacité, adaptation, impact.
+
+Chez Atome Formations, nous défendons une approche plus exigeante :
+révéler le potentiel, renforcer la posture et permettre une mise en action concrète.
+
+Notre conviction est simple :
+une formation ne doit pas seulement informer, elle doit transformer.
+
+Notre ambition :
+faire de chaque accompagnement un levier de transformation durable, directement applicable sur le terrain.”</div>
+        `
+      },
+      {
+        title: "Éléments à optimiser",
+        body: `
+          <p>Photo professionnelle, sélection de contenus épinglés, preuves de méthode et appel à l'action visible.</p>
+        `
+      }
+    ]
+  },
+  problemes: {
+    showProgress: false,
+    title: "Bulle 2 · Post “Problèmes”",
+    sub: "Créer de l'accroche en mettant des mots justes sur les frustrations et blocages de la cible.",
+    badge: "Visibilité",
+    progress: 68,
+    sections: [
+      {
+        title: "Angle du post",
+        body: `
+          <p>Le post “Problèmes” sert à capter l'attention en nommant ce que beaucoup vivent sans toujours réussir à le formuler.</p>
+          <div class="example">Exemple d'accroche : “Vos équipes suivent des formations… mais rien ne change vraiment derrière ? Le problème n'est pas toujours le contenu. C'est souvent l'absence de transformation réelle.”</div>
+        `
+      },
+      {
+        title: "Structure recommandée",
+        body: `
+          <p>1. Une phrase qui crée le déclic. 2. Le vrai problème. 3. Les conséquences. 4. Une ouverture vers votre approche.</p>
+        `
+      }
+    ]
+  },
+  inspirant: {
+    showProgress: false,
+    title: "Bulle 3 · Post “Inspirant”",
+    sub: "Projeter la cible dans un avant / après, avec une parole plus humaine, incarnée et aspirante.",
+    badge: "Projection",
+    progress: 61,
+    sections: [
+      {
+        title: "Rôle du post",
+        body: `
+          <p>Le post inspirant élève la perception. Il montre qu'un autre niveau est possible et donne envie de s'y identifier.</p>
+          <div class="example">Exemple : “Il y a un moment où l'on cesse de douter de sa place. Et ce moment arrive souvent quand on change de posture, pas quand on accumule plus d'informations.”</div>
+        `
+      },
+      {
+        title: "Narration",
+        body: `
+          <p>Utiliser un ton plus sensible, avec un point de bascule, une transformation et une conclusion qui ouvre vers l'action.</p>
+        `
+      }
+    ]
+  },
+  educatif: {
+    showProgress: false,
+    title: "Bulle 4 · Post “Éducatif”",
+    sub: "Apporter de la pédagogie, structurer la réflexion et prouver la maîtrise du sujet.",
+    badge: "Autorité",
+    progress: 77,
+    sections: [
+      {
+        title: "Format conseillé",
+        body: `
+          <p>Le carrousel ou le post structuré en points fonctionne très bien. L'idée est de rendre un sujet clair, mémorisable et utile immédiatement.</p>
+          <div class="example">Exemple : “3 raisons pour lesquelles une formation ne transforme pas les pratiques : 1. pas de mise en situation, 2. pas de suivi, 3. pas de travail sur la posture.”</div>
+        `
+      },
+      {
+        title: "Objectif attendu",
+        body: `
+          <p>Ce type de contenu consolide la crédibilité et montre une vraie maîtrise de la pédagogie.</p>
+        `
+      }
+    ]
+  },
+
+  google: {
+    showProgress: true,
+    title: "Google Business",
+    sub: "Le pôle local pour renforcer la visibilité dans Dax, le Grand Dax et les Landes.",
+    badge: "Canal prioritaire",
+    progress: 90,
+    sections: [
+      {
+        title: "Rôle du cercle",
+        body: `
+          <p>Google Business sert à capter la demande locale, rassurer instantanément et remonter sur les recherches à intention forte.</p>
+        `
+      },
+      {
+        title: "Leviers activés",
+        body: `
+          <p>SEO local, collecte d’avis et posts Google réguliers pour nourrir la fiche et renforcer la présence.</p>
+        `
+      }
+    ]
+  },
+  seo_local: {
+    showProgress: false,
+    title: "Google Business · SEO local",
+    sub: "Travailler les mots-clés qui relient Atome Formations au territoire et aux besoins de formation ciblés.",
+    badge: "Référencement local",
+    progress: 86,
+    sections: [
+      {
+        title: "Mots-clés à intégrer",
+        body: `
+          <ul>
+            <li>organisme de formation</li>
+            <li>centre de formation</li>
+            <li>formation médico-social</li>
+            <li>formation des salariés</li>
+            <li>formation management</li>
+            <li>formation marketing</li>
+            <li>Dax</li>
+            <li>Grand Dax</li>
+            <li>Landes</li>
+          </ul>
+        `
+      },
+      {
+        title: "Zones d’intégration",
+        body: `
+          <p>Description de la fiche, services, publications Google, légendes visuelles, site web lié et textes d’avis quand c’est naturel.</p>
+        `
+      }
+    ]
+  },
+  avis_clients: {
+    showProgress: false,
+    title: "Google Business · Avis clients",
+    sub: "Transformer les retours en preuve sociale visible et rassurante.",
+    badge: "Confiance",
+    progress: 0,
+    sections: [
+      {
+        title: "Objectif",
+        body: `
+          <p>Obtenir des avis qui parlent du professionnalisme, de la pédagogie, de l’impact et du contexte de formation.</p>
+        `
+      },
+      {
+        title: "Structure attendue",
+        body: `
+          <p>Qui a été formé, sur quel sujet, ce que cela a apporté et ce qui a été apprécié dans l’accompagnement.</p>
+        `
+      }
+    ]
+  },
+  posts_google: {
+    showProgress: false,
+    title: "Google Business · Posts Google",
+    sub: "Donner de la vie à la fiche avec des prises de parole courtes et régulières.",
+    badge: "Animation locale",
+    progress: 63,
+    sections: [
+      {
+        title: "Formats à publier",
+        body: `
+          <ul>
+            <li>Mise en avant d’une formation</li>
+            <li>Zoom sur un bénéfice concret</li>
+            <li>Nouveauté ou actualité</li>
+            <li>Rappel de session ou disponibilité</li>
+            <li>Focus local ou territorial</li>
+          </ul>
+        `
+      },
+      {
+        title: "Rythme conseillé",
+        body: `
+          <p>1 post par semaine pour garder une fiche active et cohérente avec le reste de la stratégie digitale.</p>
+        `
+      }
+    ]
+  },
+
+  siteweb: {
+    showProgress: true,
+    title: "Site Web",
+    sub: "Le pôle de conversion qui transforme l’intérêt en prise de contact et en demande qualifiée.",
+    badge: "Canal de conversion",
+    progress: 35,
+    sections: [
+      {
+        title: "Rôle du cercle",
+        body: `
+          <p>Le site doit rassurer, clarifier les offres et aider la cible à comprendre pourquoi Atome Formations est le bon choix.</p>
+        `
+      },
+      {
+        title: "Architecture",
+        body: `
+          <p>Un accueil impactant, une page médico-social, des pages formations convaincantes et une FAQ qui lève les objections.</p>
+        `
+      }
+    ]
+  },
+  accueil_impact: {
+    showProgress: false,
+    title: "Site Web · Accueil impact",
+    sub: "Créer une première impression forte, claire et orientée bénéfice.",
+    badge: "Page clé",
+    progress: 82,
+    sections: [
+      {
+        title: "Bloc hero",
+        body: `
+          <p>Une promesse claire, un sous-texte qui pose le problème, un appel à l’action visible et une lecture immédiate de la valeur ajoutée.</p>
+        `
+      },
+      {
+        title: "Maquette",
+        body: `
+          <div class="example">Zone réservée pour visualiser la maquette d’accueil que tu implanteras ensuite en PDF.</div>
+        `
+      }
+    ]
+  },
+  page_medico_social: {
+    showProgress: false,
+    title: "Site Web · Page médico-social",
+    sub: "Créer une page dédiée qui parle le langage du secteur et de ses enjeux.",
+    badge: "Page sectorielle",
+    progress: 79,
+    sections: [
+      {
+        title: "Contenu à faire ressortir",
+        body: `
+          <p>Enjeux terrain, besoins humains, professionnalisation, accompagnement des équipes, qualité de service et adaptation des postures professionnelles.</p>
+        `
+      },
+      {
+        title: "Maquette",
+        body: `
+          <div class="example">Zone réservée pour visualiser la maquette de la page médico-social que tu implanteras ensuite en PDF.</div>
+        `
+      }
+    ]
+  },
+  page_formations: {
+    showProgress: false,
+    title: "Site Web · Page formations",
+    sub: "Reprendre la logique d’une page offre, mais adaptée à la formation.",
+    badge: "Offres",
+    progress: 77,
+    sections: [
+      {
+        title: "Structure recommandée",
+        body: `
+          <ul>
+            <li>Problème rencontré</li>
+            <li>Bénéfices visés</li>
+            <li>Public concerné</li>
+            <li>Programme ou axes d’intervention</li>
+            <li>Modalités</li>
+            <li>Durée</li>
+            <li>Résultats attendus</li>
+            <li>Appel à l’action</li>
+          </ul>
+        `
+      },
+      {
+        title: "Angle marketing",
+        body: `
+          <p>On ne liste pas seulement un contenu : on vend une transformation, une montée en compétence et un impact concret sur le terrain.</p>
+        `
+      }
+    ]
+  },
+  faq_rassurante: {
+    showProgress: false,
+    title: "Site Web · FAQ rassurante",
+    sub: "Lever les objections et sécuriser la prise de contact.",
+    badge: "Rassurance",
+    progress: 71,
+    sections: [
+      {
+        title: "Questions à traiter",
+        body: `
+          <ul>
+            <li>Pour qui ?</li>
+            <li>Comment se déroule la formation ?</li>
+            <li>Y a-t-il une adaptation sur mesure ?</li>
+            <li>Quels résultats attendre ?</li>
+            <li>Quelles modalités de prise en charge ?</li>
+          </ul>
+        `
+      },
+      {
+        title: "Effet recherché",
+        body: `
+          <p>Réduire les freins, répondre avant même l’échange commercial et faire gagner du temps à la prise de décision.</p>
+        `
+      }
+    ]
+  },
+
+  puissance_editoriale: {
+    showProgress: true,
+    title: "Puissance éditoriale",
+    sub: "Le pôle qui donne de l’ampleur à la marque grâce à l’incarnation et à la prise de parole.",
+    badge: "Amplification",
+    progress: 67,
+    sections: [
+      {
+        title: "Objectif",
+        body: `
+          <p>Créer une présence plus forte, plus incarnée et plus mémorable au-delà des formats statiques.</p>
+        `
+      },
+      {
+        title: "Deux leviers",
+        body: `
+          <p>Vidéo face cam pour humaniser, prise de position pour se différencier.</p>
+        `
+      }
+    ]
+  },
+  video_face_cam: {
+    showProgress: false,
+    title: "Puissance éditoriale · Vidéo face cam",
+    sub: "Rendre l’expertise plus vivante, humaine et immédiatement identifiable.",
+    badge: "Incarnation",
+    progress: 73,
+    sections: [
+      {
+        title: "Ce que la vidéo apporte",
+        body: `
+          <p>Voix, énergie, posture, clarté. La vidéo accélère la confiance et rapproche la cible de la personne qui porte la marque.</p>
+        `
+      },
+      {
+        title: "Angles possibles",
+        body: `
+          <ul>
+            <li>Idée reçue sur la formation</li>
+            <li>Conseil terrain</li>
+            <li>Observation forte</li>
+            <li>Mini prise de recul sur un enjeu du secteur</li>
+          </ul>
+        `
+      }
+    ]
+  },
+  prise_position: {
+    showProgress: false,
+    title: "Puissance éditoriale · Prise de position",
+    sub: "Assumer une vision forte pour sortir du discours neutre et mémorable.",
+    badge: "Différenciation",
+    progress: 69,
+    sections: [
+      {
+        title: "Pourquoi c’est clé",
+        body: `
+          <p>Une marque qui ne prend jamais position reste générique. Une marque qui affirme une vision gagne en relief, en autorité et en mémorisation.</p>
+        `
+      },
+      {
+        title: "Exemples d’angles",
+        body: `
+          <div class="example">“Former ne suffit plus.” · “Une bonne formation ne transmet pas seulement un contenu, elle transforme une posture.”</div>
+        `
+      }
+    ]
+  }
+};
+
+const modal = document.getElementById('modal');
+const modalTitle = document.getElementById('modalTitle');
+const modalSub = document.getElementById('modalSub');
+const modalBadge = document.getElementById('modalBadge');
+const progressBar = document.getElementById('progressBar');
+const progressText = document.getElementById('progressText');
+const accordion = document.getElementById('accordion');
+const closeBtn = document.getElementById('closeBtn');
+
+function openModal(key){
+  const item = content[key];
+  if(!item) return;
+
+  modalTitle.textContent = item.title;
+  modalSub.textContent = item.sub;
+  modalBadge.textContent = item.badge;
+  const shouldShowProgress = item.showProgress !== false;
+  document.querySelector('.progress-wrap').classList.toggle('hidden', !shouldShowProgress);
+  if (shouldShowProgress) {
+    progressBar.style.width = item.progress + '%';
+    progressText.textContent = item.progress + '%';
+  }
+
+  accordion.innerHTML = item.sections.map((section, index) => `
+    <details class="section" ${index === 0 ? 'open' : ''}>
+      <summary>
+        <span>${section.title}</span>
+        <span class="plus">+</span>
+      </summary>
+      <div class="section-body">${section.body}</div>
+    </details>
+  `).join('');
+
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden','false');
+}
+
+function closeModal(){
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden','true');
+}
+
+document.querySelectorAll('[data-key]').forEach(el => {
+  el.addEventListener('click', () => openModal(el.dataset.key));
+});
+
+closeBtn.addEventListener('click', closeModal);
+modal.addEventListener('click', (e) => {
+  if(e.target === modal) closeModal();
+});
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape') closeModal();
+});
+</script>
+</body>
+</html>
