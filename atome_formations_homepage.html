@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --teal: #009688;
+    --teal-dark: #00695c;
+    --teal-light: #e0f2f0;
+    --orange: #f4622a;
+    --orange-dark: #d4501e;
+    --dark: #0f2027;
+    --dark2: #1a2e35;
+    --white: #ffffff;
+    --gray-light: #f5f7f6;
+    --gray-mid: #8a9ba8;
+    --text: #1c2b30;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font-body); color: var(--text); background: var(--white); font-size: 16px; line-height: 1.65; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--dark);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2.5rem;
+    height: 64px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; }
+  .nav-logo-icon {
+    width: 34px; height: 34px;
+    background: var(--teal);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 13px; color: white; letter-spacing: -0.5px;
+  }
+  .nav-logo-text { color: white; font-size: 14px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+  .nav-links { display: flex; align-items: center; gap: 2rem; }
+  .nav-links a {
+    color: rgba(255,255,255,0.7); font-size: 13px; text-decoration: none;
+    font-weight: 400; letter-spacing: 0.02em; transition: color 0.2s;
+    cursor: pointer;
+  }
+  .nav-links a:hover { color: var(--teal); }
+  .nav-cta {
+    background: var(--orange); color: white; border: none;
+    padding: 8px 20px; border-radius: 6px; font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: background 0.2s; font-family: var(--font-body);
+  }
+  .nav-cta:hover { background: var(--orange-dark); }
+
+  /* HERO */
+  .hero {
+    background: var(--dark);
+    position: relative; overflow: hidden;
+    padding: 90px 2.5rem 80px;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(0,150,136,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(0,150,136,0.15);
+    border: 1px solid rgba(0,150,136,0.4);
+    color: var(--teal);
+    font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 30px; margin-bottom: 2rem;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--teal);
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    font-weight: 700; color: white;
+    line-height: 1.15; max-width: 780px;
+    margin-bottom: 1.25rem;
+  }
+  .hero h1 span { color: var(--teal); }
+  .hero-sub {
+    font-size: 1.05rem; color: rgba(255,255,255,0.6);
+    max-width: 560px; margin-bottom: 2.5rem;
+  }
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-bottom: 3.5rem; }
+  .btn-primary {
+    background: var(--teal); color: white; border: none;
+    padding: 14px 28px; border-radius: 7px; font-size: 15px; font-weight: 500;
+    cursor: pointer; transition: background 0.2s; font-family: var(--font-body);
+    text-decoration: none; display: inline-block;
+  }
+  .btn-primary:hover { background: var(--teal-dark); }
+  .btn-secondary {
+    background: transparent; color: white;
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 14px 28px; border-radius: 7px; font-size: 15px; font-weight: 400;
+    cursor: pointer; transition: border-color 0.2s; font-family: var(--font-body);
+  }
+  .btn-secondary:hover { border-color: rgba(255,255,255,0.55); }
+  .hero-stats {
+    display: flex; gap: 3.5rem; padding-top: 2.5rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    position: relative; z-index: 1;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat-num {
+    font-family: var(--font-display);
+    font-size: 2rem; font-weight: 700; color: white;
+    display: block; line-height: 1;
+  }
+  .hero-stat-num span { color: var(--teal); }
+  .hero-stat-label { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 4px; display: block; }
+
+  /* QUALIOPI BANNER */
+  .qualiopi-banner {
+    background: var(--teal-light);
+    border-bottom: 1px solid rgba(0,150,136,0.15);
+    padding: 14px 2.5rem;
+    display: flex; align-items: center; justify-content: center; gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .qualiopi-badge {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .qualiopi-seal {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--teal);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; color: white; font-weight: 700;
+  }
+  .qualiopi-text strong { color: var(--teal-dark); font-size: 14px; display: block; }
+  .qualiopi-text span { color: #4a7a73; font-size: 12px; }
+  .qualiopi-divider { width: 1px; height: 32px; background: rgba(0,150,136,0.25); }
+  .qualiopi-tag {
+    font-size: 12px; color: var(--teal-dark); font-weight: 500;
+    background: rgba(0,150,136,0.12); border-radius: 4px; padding: 4px 10px;
+  }
+
+  /* SECTION HEADERS */
+  section { padding: 72px 2.5rem; }
+  .section-label {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal);
+    display: block; margin-bottom: 10px;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.7rem, 3.5vw, 2.4rem);
+    font-weight: 700; color: var(--text);
+    line-height: 1.2; max-width: 680px;
+  }
+  .section-title.centered { text-align: center; max-width: 100%; }
+  .section-sub {
+    color: var(--gray-mid); font-size: 15px; margin-top: 10px; max-width: 580px;
+  }
+  .section-sub.centered { text-align: center; max-width: 640px; margin: 10px auto 0; }
+
+  /* FINANCEMENT */
+  .financement-section { background: var(--dark2); }
+  .financement-section .section-title { color: white; }
+  .financement-section .section-sub { color: rgba(255,255,255,0.5); }
+  .financement-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px; margin-top: 2.5rem;
+    background: rgba(255,255,255,0.07); border-radius: 10px; overflow: hidden;
+  }
+  .financement-card {
+    background: var(--dark2); padding: 1.5rem;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .financement-icon {
+    width: 40px; height: 40px; border-radius: 8px;
+    background: rgba(0,150,136,0.15);
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+  }
+  .financement-card h3 { font-size: 14px; font-weight: 500; color: white; }
+  .financement-card p { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.5; }
+
+  /* FORMATIONS GRID */
+  .formations-section { background: var(--gray-light); }
+  .formations-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1.25rem; margin-top: 2.5rem; }
+  .formation-card {
+    border-radius: 12px; overflow: hidden;
+    position: relative; cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .formation-card:hover { transform: translateY(-3px); }
+  .formation-card-inner { padding: 1.75rem; height: 100%; }
+  .formation-card.medico { background: var(--teal); min-height: 320px; }
+  .formation-card.pilotage { background: var(--dark); }
+  .formation-card.transition { background: var(--dark); }
+  .formation-card.construire { background: var(--orange); grid-column: 2 / 4; }
+  .formation-tag {
+    display: inline-block; font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 4px 10px; border-radius: 30px;
+    margin-bottom: 1.2rem;
+  }
+  .medico .formation-tag { background: rgba(255,255,255,0.2); color: white; }
+  .pilotage .formation-tag, .transition .formation-tag { background: rgba(0,150,136,0.25); color: var(--teal); }
+  .construire .formation-tag { background: rgba(255,255,255,0.2); color: white; }
+  .formation-card h3 { font-size: 1.1rem; font-weight: 700; color: white; margin-bottom: 8px; line-height: 1.25; }
+  .formation-card.medico h3 { font-family: var(--font-display); font-size: 1.5rem; }
+  .formation-card p { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.6; margin-bottom: 1.5rem; }
+  .formation-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: white; font-size: 13px; font-weight: 500; text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.35); padding-bottom: 2px;
+    cursor: pointer; background: none; border-left: none; border-right: none; border-top: none;
+    font-family: var(--font-body);
+  }
+  .formation-highlight {
+    position: absolute; top: 1.2rem; right: 1.2rem;
+    background: var(--orange); color: white;
+    font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 5px 10px; border-radius: 30px;
+  }
+  .medico .formation-highlight { background: rgba(255,255,255,0.25); color: white; }
+
+  /* SOPHIE */
+  .sophie-section { background: white; }
+  .sophie-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; margin-top: 2rem; }
+  .sophie-img-wrapper {
+    background: var(--teal-light);
+    border-radius: 16px; overflow: hidden;
+    position: relative; aspect-ratio: 4/5;
+    display: flex; align-items: flex-end;
+  }
+  .sophie-img-placeholder {
+    width: 100%; height: 100%;
+    background: linear-gradient(160deg, #e0f2f0 0%, #b2dfdb 100%);
+    display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 1rem;
+  }
+  .sophie-initials {
+    width: 90px; height: 90px; border-radius: 50%;
+    background: var(--teal);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-size: 2rem; color: white; font-weight: 700;
+  }
+  .sophie-img-caption {
+    position: absolute; bottom: 1.5rem; left: 1.5rem; right: 1.5rem;
+    background: var(--dark); border-radius: 10px; padding: 1rem 1.25rem;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .sophie-quote-mark { font-family: var(--font-display); font-size: 2.5rem; color: var(--teal); line-height: 1; }
+  .sophie-quote-text { font-size: 13px; color: rgba(255,255,255,0.7); font-style: italic; line-height: 1.5; }
+  .sophie-content { display: flex; flex-direction: column; gap: 1.25rem; }
+  .sophie-kpi-row { display: flex; gap: 1.25rem; margin-top: 0.5rem; }
+  .sophie-kpi {
+    flex: 1; background: var(--gray-light); border-radius: 10px; padding: 1rem 1.25rem;
+    border-left: 3px solid var(--teal);
+  }
+  .sophie-kpi strong { font-family: var(--font-display); font-size: 1.6rem; color: var(--teal); display: block; }
+  .sophie-kpi span { font-size: 12px; color: var(--gray-mid); }
+  .sophie-text { font-size: 15px; color: #4a5c62; line-height: 1.75; }
+  .sophie-text strong { color: var(--text); font-weight: 500; }
+
+  /* TEMOIGNAGES */
+  .temoignages-section { background: var(--gray-light); }
+  .temoignages-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 2.5rem; }
+  .temoignage-card {
+    background: white; border-radius: 12px; padding: 1.5rem;
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .temoignage-stars { color: var(--orange); font-size: 13px; margin-bottom: 0.75rem; }
+  .temoignage-text { font-size: 14px; color: #4a5c62; line-height: 1.7; font-style: italic; margin-bottom: 1rem; }
+  .temoignage-author { display: flex; align-items: center; gap: 10px; }
+  .temoignage-avatar {
+    width: 36px; height: 36px; border-radius: 50%; background: var(--teal-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 500; color: var(--teal-dark);
+  }
+  .temoignage-name { font-size: 13px; font-weight: 500; color: var(--text); }
+  .temoignage-role { font-size: 12px; color: var(--gray-mid); }
+
+  /* CTA FINAL */
+  .cta-section {
+    background: var(--dark); text-align: center; padding: 80px 2.5rem;
+    position: relative; overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 70% at 50% 100%, rgba(244,98,42,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-section h2 { font-family: var(--font-display); font-size: 2.2rem; color: white; margin-bottom: 1rem; }
+  .cta-section p { color: rgba(255,255,255,0.5); font-size: 15px; max-width: 500px; margin: 0 auto 2rem; }
+  .btn-orange {
+    background: var(--orange); color: white; border: none;
+    padding: 16px 36px; border-radius: 8px; font-size: 16px; font-weight: 500;
+    cursor: pointer; transition: background 0.2s; font-family: var(--font-body);
+  }
+  .btn-orange:hover { background: var(--orange-dark); }
+  .cta-reassurance {
+    margin-top: 1.25rem; font-size: 13px; color: rgba(255,255,255,0.35);
+    display: flex; gap: 1.5rem; justify-content: center; align-items: center;
+  }
+  .cta-reassurance span::before { content: '✓ '; color: var(--teal); }
+
+  /* FOOTER */
+  footer {
+    background: #080f13; padding: 2rem 2.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    flex-wrap: wrap; gap: 1rem;
+  }
+  footer p { font-size: 12px; color: rgba(255,255,255,0.25); }
+  .footer-contact { display: flex; gap: 1.5rem; }
+  .footer-contact a { font-size: 12px; color: rgba(255,255,255,0.35); text-decoration: none; }
+  .footer-contact a:hover { color: var(--teal); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-icon">AF</div>
+    <span class="nav-logo-text">Atome Formations</span>
+  </div>
+  <div class="nav-links">
+    <a>Médico-social</a>
+    <a>Dirigeants</a>
+    <a>Jeunesse & Seniors</a>
+    <a>Financement</a>
+    <button class="nav-cta">Demander un accompagnement</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Organisme certifié Qualiopi</div>
+  <h1>Accompagner les <span>transitions humaines</span>,<br>à chaque étape de la vie.</h1>
+  <p class="hero-sub">Formations finançables pour les établissements médico-sociaux, les dirigeants de TPE/PME et les professionnels en reconversion.</p>
+  <div class="hero-actions">
+    <button class="btn-primary">Découvrir les formations</button>
+    <button class="btn-secondary">Comment financer ma formation ?</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="hero-stat-num">16<span>+</span></span>
+      <span class="hero-stat-label">ans d'expérience terrain</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">70</span>
+      <span class="hero-stat-label">collaborateurs managés</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">100<span>%</span></span>
+      <span class="hero-stat-label">formations finançables</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">2</span>
+      <span class="hero-stat-label">formats : présentiel & distanciel</span>
+    </div>
+  </div>
+</section>
+
+<!-- QUALIOPI BANNER -->
+<div class="qualiopi-banner">
+  <div class="qualiopi-badge">
+    <div class="qualiopi-seal">Q</div>
+    <div class="qualiopi-text">
+      <strong>Certifié Qualiopi</strong>
+      <span>Référentiel National Qualité — formations professionnelles</span>
+    </div>
+  </div>
+  <div class="qualiopi-divider"></div>
+  <span class="qualiopi-tag">Finançable OPCO</span>
+  <span class="qualiopi-tag">Finançable CPF</span>
+  <span class="qualiopi-tag">Finançable Opco Santé / Unifaf</span>
+</div>
+
+<!-- FINANCEMENT -->
+<section class="financement-section">
+  <div style="text-align:center;">
+    <span class="section-label">Zéro reste à charge</span>
+    <h2 class="section-title centered" style="color:white;">Comment financer votre formation ?</h2>
+    <p class="section-sub centered">Grâce à notre certification Qualiopi, toutes nos formations sont éligibles aux principaux dispositifs de financement.</p>
+  </div>
+  <div class="financement-grid">
+    <div class="financement-card">
+      <div class="financement-icon">🏢</div>
+      <h3>OPCO / Unifaf</h3>
+      <p>Pour les établissements médico-sociaux et professionnels du domicile. Prise en charge jusqu'à 100% selon votre branche.</p>
+    </div>
+    <div class="financement-card">
+      <div class="financement-icon">💼</div>
+      <h3>Plan de développement</h3>
+      <p>Pour les TPE/PME. Votre OPCO prend en charge le coût de formation de vos salariés et dirigeants.</p>
+    </div>
+    <div class="financement-card">
+      <div class="financement-icon">🎓</div>
+      <h3>CPF</h3>
+      <p>Mobilisez votre Compte Personnel de Formation pour financer votre reconversion ou montée en compétences.</p>
+    </div>
+    <div class="financement-card">
+      <div class="financement-icon">📋</div>
+      <h3>France Travail</h3>
+      <p>Dispositifs spécifiques pour les personnes en transition professionnelle ou demandeurs d'emploi.</p>
+    </div>
+  </div>
+  <div style="text-align:center; margin-top:2rem;">
+    <button class="btn-primary" style="background:var(--orange);">Je veux savoir si je suis éligible</button>
+  </div>
+</section>
+
+<!-- FORMATIONS -->
+<section class="formations-section">
+  <span class="section-label">Nos formations</span>
+  <h2 class="section-title">Une expertise, quatre accompagnements.</h2>
+  <p class="section-sub">Chaque programme est construit à partir du terrain, pas d'un manuel.</p>
+
+  <div class="formations-grid">
+    <div class="formation-card medico" style="grid-row: span 2;">
+      <div class="formation-card-inner">
+        <div class="formation-highlight">Priorité établissements</div>
+        <div class="formation-tag">Médico-social & domicile</div>
+        <h3>Redonner du sens<br>au soin.</h3>
+        <p>Prévention de l'épuisement professionnel, bientraitance, cohésion d'équipe. Des formations ancrées dans la réalité des soignants — pas dans les PowerPoints.</p>
+        <p style="margin-bottom:1.75rem;">Protocoles, posture, gestion de crise. Pour les équipes et les encadrants.</p>
+        <button class="formation-link">Voir le programme →</button>
+      </div>
+    </div>
+
+    <div class="formation-card pilotage">
+      <div class="formation-card-inner">
+        <div class="formation-tag">Dirigeants TPE/PME</div>
+        <h3>Piloter avec clarté.</h3>
+        <p>Sortir de l'opérationnel, déléguer, structurer. Vision, leadership, rentabilité durable.</p>
+        <button class="formation-link">Découvrir →</button>
+      </div>
+    </div>
+
+    <div class="formation-card transition">
+      <div class="formation-card-inner">
+        <div class="formation-tag">Reconversion & emploi</div>
+        <h3>Trouver sa trajectoire.</h3>
+        <p>Reconversion, retour à l'emploi, repositionnement. Compétences, confiance, projet réaliste.</p>
+        <button class="formation-link">Découvrir →</button>
+      </div>
+    </div>
+
+    <div class="formation-card construire">
+      <div class="formation-card-inner" style="display:flex; justify-content:space-between; align-items:center; height:100%; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <div class="formation-tag">Jeunesse & Seniors</div>
+          <h3 style="font-family:var(--font-display); font-size:1.3rem;">Construire & transmettre.</h3>
+          <p>De la quête de voie à la redéfinition de vie. Chaque génération mérite un accompagnement sur mesure.</p>
+        </div>
+        <button class="formation-link">Créer votre nouveau chapitre →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOPHIE -->
+<section class="sophie-section">
+  <div class="sophie-grid">
+    <div class="sophie-img-wrapper">
+      <div class="sophie-img-placeholder">
+        <div class="sophie-initials">SF</div>
+        <p style="font-size:13px; color:#4a7a73;">Photo de Sophie Fargues</p>
+      </div>
+      <div class="sophie-img-caption">
+        <div class="sophie-quote-mark">"</div>
+        <p class="sophie-quote-text">Les difficultés ne sont pas seulement techniques.<br>Elles sont humaines.</p>
+      </div>
+    </div>
+    <div class="sophie-content">
+      <span class="section-label">La fondatrice</span>
+      <h2 class="section-title">Sophie Fargues<br><span style="color:var(--teal);">16 ans au cœur du terrain.</span></h2>
+      <div class="sophie-kpi-row">
+        <div class="sophie-kpi">
+          <strong>16+</strong>
+          <span>ans d'expérience médico-sociale</span>
+        </div>
+        <div class="sophie-kpi">
+          <strong>70</strong>
+          <span>collaborateurs managés, sans conflit</span>
+        </div>
+      </div>
+      <p class="sophie-text">
+        Avant de créer Atome Formations, Sophie a dirigé des équipes au cœur du médico-social. <strong>Direction d'équipes, coordination, responsabilité de 70 salariés, gestion de crises humaines et organisationnelles.</strong>
+      </p>
+      <p class="sophie-text">
+        Elle a vu la fatigue des soignants, la solitude des dirigeants. Et elle a compris une chose : à chaque étape de la vie, il y a une transition. Une transition que personne n'apprend vraiment à traverser.
+      </p>
+      <p class="sophie-text" style="font-style:italic; color:var(--teal-dark);">
+        C'est de cette prise de conscience qu'est né Atome Formations.
+      </p>
+      <button class="btn-primary" style="align-self:flex-start; margin-top:0.5rem;">Rencontrer Sophie</button>
+    </div>
+  </div>
+</section>
+
+<!-- TEMOIGNAGES -->
+<section class="temoignages-section">
+  <div style="text-align:center; margin-bottom:0;">
+    <span class="section-label">Ce qu'ils en disent</span>
+    <h2 class="section-title centered">Des professionnels qui ont fait confiance à Atome.</h2>
+  </div>
+  <div class="temoignages-grid">
+    <div class="temoignage-card">
+      <div class="temoignage-stars">★★★★★</div>
+      <p class="temoignage-text">"Une formation ancrée dans la vraie vie des soignants. On n'est pas dans la théorie — on repart avec des outils concrets qu'on peut appliquer le lendemain matin."</p>
+      <div class="temoignage-author">
+        <div class="temoignage-avatar">MC</div>
+        <div>
+          <p class="temoignage-name">Marie-Claire D.</p>
+          <p class="temoignage-role">Coordinatrice EHPAD, Bordeaux</p>
+        </div>
+      </div>
+    </div>
+    <div class="temoignage-card">
+      <div class="temoignage-stars">★★★★★</div>
+      <p class="temoignage-text">"J'avais l'impression de tourner en rond dans mon entreprise. Le programme Pilotage m'a aidé à poser les bases que je n'avais jamais eu le temps de construire."</p>
+      <div class="temoignage-author">
+        <div class="temoignage-avatar">JL</div>
+        <div>
+          <p class="temoignage-name">Julien L.</p>
+          <p class="temoignage-role">Dirigeant TPE, secteur BTP</p>
+        </div>
+      </div>
+    </div>
+    <div class="temoignage-card">
+      <div class="temoignage-stars">★★★★★</div>
+      <p class="temoignage-text">"Sophie comprend le secteur de l'intérieur. Ce n'est pas un prestataire externe — c'est quelqu'un qui a vécu les mêmes situations que nous."</p>
+      <div class="temoignage-author">
+        <div class="temoignage-avatar">AV</div>
+        <div>
+          <p class="temoignage-name">Amina V.</p>
+          <p class="temoignage-role">Directrice d'établissement, Lyon</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p style="text-align:center; font-size:12px; color:var(--gray-mid); margin-top:1.5rem;">⚠ Témoignages à remplacer par de vrais retours clients</p>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-section">
+  <h2>Prêt à franchir le pas ?</h2>
+  <p>Échangeons 20 minutes pour identifier la formation adaptée à votre situation et votre mode de financement.</p>
+  <button class="btn-orange">Demander mon accompagnement</button>
+  <div class="cta-reassurance">
+    <span>Formations finançables</span>
+    <span>Certifié Qualiopi</span>
+    <span>Présentiel & distanciel</span>
+    <span>Réponse sous 24h</span>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="nav-logo">
+    <div class="nav-logo-icon">AF</div>
+    <span class="nav-logo-text" style="color:rgba(255,255,255,0.4);">Atome Formations</span>
+  </div>
+  <div class="footer-contact">
+    <a href="tel:0533040812">05 33 04 08 12</a>
+    <a href="mailto:contact@atome-formations.fr">contact@atome-formations.fr</a>
+    <a>Mentions légales</a>
+  </div>
+  <p>© 2025 Atome Formations — Certifié Qualiopi</p>
+</footer>
+
+</body>
+</html>
