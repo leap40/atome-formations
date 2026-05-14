@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atome Formations — Google Business & Checklist</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800&family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a2535;--bg2:#0d3447;--em:#2bbfa0;--em2:#1e9e84;
+  --gold:#e8a838;--white:#fff;--off:#f4f8f7;
+  --dark:#0a2535;--mid:#4a6e7a;--light:#e2eeec;--muted:#7a9aaa;
+  --c-ok:#2bbfa0;--c-warn:#e8a838;--c-todo:#e05c3a;
+  --r:10px;--sh:0 4px 20px rgba(10,37,53,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--dark);}
+
+/* HERO */
+.hero{background:var(--bg);color:#fff;padding:56px 40px 48px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;right:-100px;top:-100px;width:400px;height:400px;border-radius:50%;background:rgba(43,191,160,.08);pointer-events:none;}
+.hero-in{max-width:960px;margin:0 auto;position:relative;z-index:1;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(43,191,160,.15);border:1px solid rgba(43,191,160,.3);color:var(--em);font-family:'Syne',sans-serif;font-weight:700;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding:6px 14px;border-radius:20px;margin-bottom:20px;}
+.hero-badge span{width:6px;height:6px;border-radius:50%;background:var(--em);}
+.hero h1{font-family:'Playfair Display',Georgia,serif;font-weight:800;font-size:clamp(26px,4vw,46px);line-height:1.1;margin-bottom:12px;letter-spacing:-.5px;}
+.hero h1 em{color:var(--em);font-style:italic;}
+.hero p{font-size:16px;opacity:.75;max-width:580px;line-height:1.7;font-weight:300;}
+.hero-stats{display:flex;gap:32px;margin-top:28px;flex-wrap:wrap;padding-top:24px;border-top:1px solid rgba(255,255,255,.1);}
+.stat strong{display:block;font-family:'Playfair Display',Georgia,serif;font-weight:800;font-size:26px;color:var(--em);letter-spacing:-.5px;}
+.stat span{font-size:12px;color:rgba(255,255,255,.5);}
+
+/* TABS */
+.tabs{background:var(--bg2);position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(255,255,255,.07);}
+.tabs-in{max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;}
+.tab{padding:16px 12px;border:none;background:none;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:rgba(255,255,255,.45);cursor:pointer;border-bottom:2px solid transparent;transition:all .18s;text-align:center;letter-spacing:.3px;}
+.tab:hover{color:rgba(255,255,255,.8);}
+.tab.on{color:#fff;border-bottom-color:var(--em);}
+
+.sec{display:none;}
+.sec.on{display:block;animation:fade .22s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.wrap{max-width:960px;margin:0 auto;padding:40px 24px;}
+
+/* CARDS */
+.card{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:26px 28px;margin-bottom:18px;border-top:3px solid transparent;}
+.card.g{border-top-color:var(--gold);}
+.card.t{border-top-color:var(--em);}
+.card.n{border-top-color:var(--bg);}
+.ctitle{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--dark);margin-bottom:16px;text-transform:uppercase;letter-spacing:.8px;}
+.ctitle em{font-style:normal;color:var(--em);}
+
+.sec-head{margin:32px 0 18px;}
+.sec-head:first-child{margin-top:0;}
+.sec-head h2{font-family:'Playfair Display',Georgia,serif;font-weight:800;font-size:clamp(20px,3vw,28px);color:var(--dark);margin-bottom:6px;letter-spacing:-.3px;}
+.sec-head p{font-size:14px;color:var(--mid);line-height:1.6;}
+
+/* TABLE */
+.info-table{width:100%;border-collapse:collapse;font-size:14px;}
+.info-table tr:nth-child(even) td{background:var(--light);}
+.info-table td{padding:11px 14px;border-radius:4px;vertical-align:top;}
+.info-table td:first-child{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:var(--dark);width:38%;letter-spacing:.3px;text-transform:uppercase;}
+
+/* GMB PREVIEW */
+.gmb-box{background:var(--bg);color:#fff;border-radius:var(--r);padding:28px;font-size:14px;line-height:1.8;white-space:pre-line;margin-bottom:10px;position:relative;}
+.gmb-box::before{content:'Description Google Business — optimisée SEO';display:block;font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--em);margin-bottom:14px;}
+.copy-btn{display:inline-flex;align-items:center;gap:7px;margin-top:10px;background:var(--em);color:var(--dark);border:none;border-radius:8px;padding:10px 20px;font-family:'Syne',sans-serif;font-weight:700;font-size:12px;cursor:pointer;transition:all .18s;}
+.copy-btn:hover{background:var(--em2);}
+.copy-btn.copied{background:rgba(43,191,160,.2);color:var(--em);}
+.char-note{font-size:12px;color:var(--muted);margin-top:6px;}
+
+/* SERVICES */
+.services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;}
+.svc{background:var(--light);border-radius:8px;padding:14px 16px;border-left:3px solid var(--em);}
+.svc strong{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--dark);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px;}
+.svc span{font-size:12px;color:var(--mid);line-height:1.5;}
+
+/* CHECKLIST */
+.checklist{list-style:none;}
+.checklist li{display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--light);font-size:14px;line-height:1.55;}
+.checklist li:last-child{border:none;}
+.ci{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.ci-ok{background:rgba(43,191,160,.15);color:var(--c-ok);}
+.ci-warn{background:rgba(232,168,56,.18);color:var(--c-warn);}
+.ci-todo{background:rgba(224,92,58,.12);color:var(--c-todo);}
+.checklist strong{color:var(--dark);font-weight:600;display:block;margin-bottom:2px;}
+.checklist .sub{color:var(--mid);font-size:13px;}
+
+/* SCORE */
+.score-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:24px;}
+.score-box{background:#fff;border-radius:var(--r);padding:18px;text-align:center;box-shadow:var(--sh);}
+.score-num{font-family:'Playfair Display',Georgia,serif;font-size:34px;font-weight:800;display:block;margin-bottom:4px;letter-spacing:-.5px;}
+.score-lbl{font-size:11px;color:var(--mid);}
+.s-ok{color:var(--c-ok);}
+.s-warn{color:var(--gold);}
+.s-todo{color:var(--c-todo);}
+
+/* PHASE HEADERS */
+.phase-head{display:flex;align-items:center;gap:10px;margin:26px 0 14px;}
+.phase-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.phase-label{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;}
+
+@media(max-width:660px){
+  .hero{padding:36px 16px 32px;}
+  .wrap{padding:20px 12px;}
+  .card{padding:20px 16px;}
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-in">
+    <div class="hero-badge"><span></span>Google Business & Checklist</div>
+    <h1>Atome Formations<br><em>Fiche & plan d'action</em></h1>
+    <p>Configuration complète de la fiche Google Business Profile et plan d'action priorisé pour dominer le référencement local.</p>
+    <div class="hero-stats">
+      <div class="stat"><strong>✓</strong><span>GMB revendiqué</span></div>
+      <div class="stat"><strong>6</strong><span>services à créer</span></div>
+      <div class="stat"><strong>20+</strong><span>avis objectif</span></div>
+    </div>
+  </div>
+</div>
+
+<nav class="tabs">
+  <div class="tabs-in">
+    <button class="tab on" onclick="showTab('gmb',this)">Google Business</button>
+    <button class="tab" onclick="showTab('check',this)">Checklist</button>
+  </div>
+</nav>
+
+<!-- ── GOOGLE BUSINESS ── -->
+<div id="s-gmb" class="sec on">
+<div class="wrap">
+
+  <div class="sec-head" style="margin-top:0">
+    <h2>Informations clés</h2>
+  </div>
+
+  <div class="card g">
+    <div class="ctitle">Fiche <em>Google Business Profile</em></div>
+    <table class="info-table">
+      <tr><td>Nom exact</td><td>Atome Formations</td></tr>
+      <tr><td>Catégorie principale</td><td><strong>Centre de formation professionnelle</strong></td></tr>
+      <tr><td>Catégories secondaires</td><td>Conseiller en entreprise · Organisme de formation continue · Formation en développement personnel</td></tr>
+      <tr><td>Adresse</td><td>430 bis, route de Oeyreluy — 40180 Seyresse</td></tr>
+      <tr><td>Zone de service</td><td>Landes (40) · Pyrénées-Atlantiques (64) · Pays basque · Sud-Ouest · France entière (distanciel)</td></tr>
+      <tr><td>Téléphone</td><td>05 33 04 08 12</td></tr>
+      <tr><td>Site web</td><td>atome-formations.fr</td></tr>
+      <tr><td>Certification</td><td>Qualiopi — à mentionner dans chaque section de la fiche</td></tr>
+      <tr><td>Financement</td><td>OPCO — prise en charge entreprise</td></tr>
+    </table>
+  </div>
+
+  <div class="sec-head">
+    <h2>Description optimisée SEO</h2>
+    <p>Prête à copier-coller dans Google Business Profile.</p>
+  </div>
+
+  <div class="card t">
+    <div class="gmb-box" id="gmb-desc">Organisme de formation professionnelle certifié Qualiopi, Atome Formations accompagne les entreprises, dirigeants et professionnels du médico-social dans les Landes, le Pays basque et sur toute la France.
+
+Nos formations en management, leadership, aide à domicile et développement des compétences sont concrètes, opérationnelles et finançables via votre OPCO.
+
+Nos programmes phares :
+• Accompagnement médico-social : formations bientraitance, Alzheimer, fin de vie, relation d'aide…
+• CLARTHÉA - Accompagnement 90 jours pour dirigeants
+• SAFIRE - Mentorat en leadership transformationnel
+• Manager par le DISC - Pilotez votre équipe avec précision
+
+Basés à Seyresse (Landes), nous intervenons dans tout le Grand Dax, le Pays basque et au-delà.
+05 33 04 08 12 — Devis gratuit sous 48h.</div>
+    <div class="char-note">≈ 680 caractères — dans la limite idéale Google (750 max)</div>
+    <button class="copy-btn" onclick="copyGMB(this)">Copier la description</button>
+  </div>
+
+  <div class="sec-head">
+    <h2>Services à créer dans la fiche</h2>
+    <p>Chaque service référencé améliore l'apparition dans les recherches spécifiques.</p>
+  </div>
+
+  <div class="card n">
+    <div class="ctitle">6 services <em>à ajouter</em></div>
+    <div class="services-grid">
+      <div class="svc"><strong>Formations médico-social</strong><span>Bientraitance, Alzheimer, fin de vie, relation d'aide, aide à domicile</span></div>
+      <div class="svc"><strong>Programme CLARTHÉA</strong><span>Accompagnement 90 jours pour dirigeants — coaching, DISC, plan d'action</span></div>
+      <div class="svc"><strong>Manager par le DISC</strong><span>Comprendre les profils de personnalité pour mieux manager et recruter</span></div>
+      <div class="svc"><strong>SAFIRE</strong><span>Mentorat en leadership transformationnel — la voie du feu calme</span></div>
+      <div class="svc"><strong>Accompagnement VAE</strong><span>Validation des Acquis de l'Expérience pour salariés et particuliers</span></div>
+      <div class="svc"><strong>Jeunesse & Seniors</strong><span>Confiance en soi, orientation, reconversion et transmission intergénérationnelle</span></div>
+    </div>
+  </div>
+
+  <div class="sec-head">
+    <h2>Stratégie avis Google</h2>
+  </div>
+
+  <div class="card g">
+    <div class="ctitle">Plan d'action <em>avis</em></div>
+    <ul class="checklist">
+      <li><div class="ci ci-warn">!</div><div><strong>Objectif : 20+ avis 5 étoiles en 3 mois</strong><span class="sub">Les organismes bien référencés localement ont en moyenne 25 à 40 avis — seuil de crédibilité Google.</span></div></li>
+      <li><div class="ci ci-todo">→</div><div><strong>Email post-formation à tous les stagiaires</strong><span class="sub">Lien direct vers la page d'avis Google — à envoyer J+3 après chaque formation.</span></div></li>
+      <li><div class="ci ci-todo">→</div><div><strong>QR Code en salle</strong><span class="sub">Affiche imprimée avec QR Code vers les avis Google — à placer en fin de session.</span></div></li>
+      <li><div class="ci ci-todo">→</div><div><strong>Répondre à 100% des avis sous 48h</strong><span class="sub">Intégrer les mots-clés SEO dans chaque réponse — Google indexe aussi les réponses.</span></div></li>
+    </ul>
+  </div>
+
+</div>
+</div>
+
+<!-- ── CHECKLIST ── -->
+<div id="s-check" class="sec">
+<div class="wrap">
+
+  <div class="score-row" style="margin-top:0">
+    <div class="score-box"><span class="score-num s-warn">14<span style="font-size:18px">/20</span></span><div class="score-lbl">Score SEO estimé</div></div>
+    <div class="score-box"><span class="score-num s-ok">20<span style="font-size:18px">/20</span></span><div class="score-lbl">Objectif post-optim.</div></div>
+    <div class="score-box"><span class="score-num s-todo">0</span><div class="score-lbl">Posts Google actifs</div></div>
+    <div class="score-box"><span class="score-num s-warn">?</span><div class="score-lbl">Avis Google actuels</div></div>
+  </div>
+
+  <!-- SEMAINE 1 -->
+  <div class="phase-head">
+    <div class="phase-dot" style="background:var(--c-todo)"></div>
+    <div class="phase-label" style="color:var(--c-todo)">Actions urgentes — Semaine 1</div>
+  </div>
+  <div class="card" style="border-top-color:var(--c-todo)">
+    <ul class="checklist">
+      <li><div class="ci ci-ok">✓</div><div><strong>Revendiquer et vérifier la fiche GMB</strong><span class="sub">Fait ✓</span></div></li>
+      <li><div class="ci ci-todo">→</div><div><strong>Copier la description optimisée SEO</strong><span class="sub">Aller dans Google Business → Modifier la fiche → Description. Copier la version de l'onglet Google Business.</span></div></li>
+      <li><div class="ci ci-todo">→</div><div><strong>Ajouter les catégories secondaires</strong><span class="sub">Conseiller en entreprise · Organisme de formation continue · Formation en développement personnel</span></div></li>
+      <li><div class="ci ci-todo">→</div><div><strong>Publier le 1er post Google</strong><span class="sub">Présentation Qualiopi + lien devis — "réveille" la fiche algorithmiquement dès la première semaine.</span></div></li>
+      <li><div class="ci ci-todo">→</div><div><strong>Uploader 5 photos minimum</strong><span class="sub">Logo, portrait Sophie, équipe, formation en action, certificat Qualiopi.</span></div></li>
+    </ul>
+  </div>
+
+  <!-- MOIS 1 -->
+  <div class="phase-head">
+    <div class="phase-dot" style="background:var(--gold)"></div>
+    <div class="phase-label" style="color:#7a5800">Actions importantes — Mois 1</div>
+  </div>
+  <div class="card" style="border-top-color:var(--gold)">
+    <ul class="checklist">
+      <li><div class="ci ci-warn">~</div><div><strong>Créer les 6 services dans la fiche</strong><span class="sub">CLARTHÉA, DISC, SAFIRE, Médico-social, VAE, Jeunesse & Seniors — voir l'onglet Google Business.</span></div></li>
+      <li><div class="ci ci-warn">~</div><div><strong>Lancer la campagne avis Google</strong><span class="sub">Email aux anciens stagiaires + QR code en salle dès la prochaine session.</span></div></li>
+      <li><div class="ci ci-warn">~</div><div><strong>Cadence 2 posts/semaine</strong><span class="sub">Suivre le calendrier éditorial — mardi 8h et jeudi 11h.</span></div></li>
+      <li><div class="ci ci-warn">~</div><div><strong>Activer le bouton "Prendre RDV"</strong><span class="sub">Connecter Calendly ou Google Agenda à la fiche GMB.</span></div></li>
+      <li><div class="ci ci-warn">~</div><div><strong>Créer les Questions / Réponses pré-remplies</strong><span class="sub">"Vos formations sont-elles finançables OPCO ?" / "Intervenez-vous hors des Landes ?"</span></div></li>
+    </ul>
+  </div>
+
+  <!-- MOIS 2-3 -->
+  <div class="phase-head">
+    <div class="phase-dot" style="background:var(--em)"></div>
+    <div class="phase-label" style="color:var(--em2)">Actions de fond — Mois 2–3</div>
+  </div>
+  <div class="card" style="border-top-color:var(--em)">
+    <ul class="checklist">
+      <li><div class="ci ci-ok">→</div><div><strong>Tourner une vidéo de présentation 30–60 sec</strong><span class="sub">Sophie face caméra ou formation en action — à publier sur GMB, site et LinkedIn.</span></div></li>
+      <li><div class="ci ci-ok">→</div><div><strong>Page dédiée par programme sur le site</strong><span class="sub">Chaque formation = URL propre avec mots-clés locaux (ex : /formation-disc-dax).</span></div></li>
+      <li><div class="ci ci-ok">→</div><div><strong>Obtenir 3 backlinks locaux</strong><span class="sub">CCI Landes, OPCO partenaires, presse locale — renforce l'autorité de domaine.</span></div></li>
+      <li><div class="ci ci-ok">→</div><div><strong>Analyser et ajuster chaque mois</strong><span class="sub">Google Business Insights — CTR, appels, demandes d'itinéraire, posts les plus vus.</span></div></li>
+    </ul>
+  </div>
+
+</div>
+</div>
+
+<script>
+function showTab(id,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById('s-'+id).classList.add('on');
+  btn.classList.add('on');
+}
+function copyGMB(btn){
+  const text=document.getElementById('gmb-desc').textContent.replace(/^Description Google Business — optimisée SEO\n/,'');
+  navigator.clipboard.writeText(text.trim()).then(()=>{
+    btn.textContent='✓ Copié !';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='Copier la description';btn.classList.remove('copied');},2000);
+  });
+}
+</script>
+</body>
+</html>
